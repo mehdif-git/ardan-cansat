@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "ARDAN_LIB")(type "KiCad")(uri "${KIPRJMOD}/Elec_Ardan_Library.kicad_sym")(options "")(descr "Librairie des symboles du cansat Ardan."))
+)

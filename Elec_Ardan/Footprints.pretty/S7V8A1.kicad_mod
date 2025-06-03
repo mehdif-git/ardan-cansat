@@ -1,0 +1,159 @@
+(footprint "S7V8A1"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "a09b6aa9-b57f-455e-88f0-e6f063284db9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "S7V8A1"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "f4e5b413-fc34-40d2-8716-019d31cf13ea")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f3331097-7cba-4e9a-b544-9b0be1ccfb42")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fd198de2-8faa-472e-bd8a-48c53ddcd1c5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2c1ae5cd-5ce1-4e8a-ab7f-ec1021587a7d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -1.4 -9.3)
+		(end 1.4 1.6)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "e1faa846-d4d8-44d8-bdb8-fcc1564088d2")
+	)
+	(fp_rect
+		(start -1.5 -9.5)
+		(end 1.5 1.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "223a9781-a098-46bd-b781-762cee509f93")
+	)
+	(fp_rect
+		(start -1.27 -9.144)
+		(end 1.27 1.524)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "be367b3e-9fab-4161-a689-7e4d08d36634")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 13.208 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "f3c1b545-85ac-44f5-8bb0-8edf327c36bd")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1.524 1.524)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "334a1534-3bfe-4bb7-a17a-943cbd73da60")
+	)
+	(pad "2" thru_hole roundrect
+		(at 0 -2.54)
+		(size 1.524 1.524)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(roundrect_rratio 0.1640419948)
+		(uuid "798c4871-eb19-4897-8d58-3c2df1997007")
+	)
+	(pad "3" thru_hole circle
+		(at 0 -5.08)
+		(size 1.524 1.524)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "f28f05cb-cf41-4b5f-b5b0-0c342baabb4e")
+	)
+	(pad "4" thru_hole circle
+		(at 0 -7.62)
+		(size 1.524 1.524)
+		(drill 1.1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "d353ab07-e449-466c-ad79-ba9724c3921b")
+	)
+	(model "${KIPRJMOD}/STEP Files/S7V8A.step"
+		(offset
+			(xyz -1.5 -2 0.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 0 -90)
+		)
+	)
+)
