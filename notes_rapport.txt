@@ -1,30 +1,135 @@
-Intro : mise en contexte.
+\section{Électronique}
 
 Liste des hacks faits :
-  - Le connecteur de la batterie avait une polarisation opposée à celui du
-    chargeur -> Utilisation de câbles Dupont pour résoudre le pb (ça marche,
+\begin{itemize}
+  \item Le connecteur de la batterie avait une polarisation opposée à celui du
+    chargeur -> Utilisation de câbles Dupont pour résoudre le problème (ça marche,
     photos du problème, et de la tension au multimètre).
-  - La bibliothèque "RadioHead" utilisée pour gérer le LoRaWAN dépend de
+  \item La bibliothèque "RadioHead" utilisée pour gérer le LoRaWAN dépend de
     "stdatomic", on doit changer le code source de "RadioHead" pour en sourcer
     l'implémentation correcte pour Arduino  vs. ESP (montrer le code).
-  - Les périphériques nécessitant plus d'entrées-sorties qu'il y en a sur
-    l'ESP32, le code active et désactive les périphériques à la volée dans le
-    code. Il est par ailleurs impossible d'utiliser un retour série pour du
-    debug. -> Illustration avec les pins de l'ESP32-CAM, expliquer le blocage
-    d'une partie par la Carte SD (utilisation du mode 1-bit pour limiter
-    l'effet) et par la caméra.
+\begin{itemize}
+
+\begin{figure}[H]
+    \centering
+    \frame{\includegraphics[width=0.8\textwidth]{images/Electronique/schematic.png}}
+    \caption{Schéma de l'électronique à bord du cansat}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{wrapfigure}{l}{0.25\textwidth}
+    \frame{\includegraphics[width=0.95\linewidth]{images/Electronique/Test_elec_1.jpg}} 
+    \caption{Tests électroniques}
+    \label{fig:wrapfig}
+\end{wrapfigure}
+
+\noindent L'alimentation du cansat est assurée par une batterie LiPo d'une cellule de capacité de 550mAh. La tension nominale de la batterie Li-Po est de 3,7V. Pour assurer une sortie en 3,3V pour la majorité de l'électronique, un convertisseur \textit{buck-boost} (S7V8A) est utilisé. Ce dernier prends en entrée une tension entre 2,5 et 8V, largement au-delà de l'interval de 3 à 4,2V de la tension de la batterie.\\
+
+\noindent Le buzzer est le seul composant électronique ne prenant pas en entrée une tension de 3,3V, l'architecture utilise un convertisseur \textit{boost} (XL6009) permettant d'élever la tension de 3,3V en 12V. Une diode (1N4007) est utilisée pour bloquer le retour de l'inductance du buzzer.\\
+
+\noindent Le BMP280 communique avec l'ESP32 en I²C et le module LoRaWAN en UART.
+Un pin de l'ESP32 est utilisé pour contrôler l'allumage du buzzer à travers un transistor (BC337-25) relié à une résistance pull-down de 100$k\Ohm$ pour assurer un état \textit{LOW} en général. Le buzzer est activé au moment de l'atterrissage du cansat.\\
+
+\noindent 
+
+\noindent Le courant maximal passant par le dispositif est de 245 milliampères :
+\begin{itemize}
+    \item  ESP32-CAM en prise d'image : pic de consommation à 200mA@3,3V
+    \item  Consommation négligeable du BMP280 (2,7µA)
+    \item  Module LoRa : 30mA@3,3V en émission
+    \item  Buzzer : 15mA@12V en utilisation
+\end{itemize}
+
+La batterie permet donc un fonctionnement durant 2 heures.
+
+\begin{figure}[!ht]
+    \centering
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Composants/BMP280.jpg}
+        \caption{Module BMP280}
+        \label{fig:bmp280}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Composants/ESP32CAM.png}
+        \caption{ESP32CAM}
+        \label{fig:esp32cam}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Composants/S7V8A.jpg}
+        \caption{Module S7V8A}
+        \label{fig:s7v8a}
+    \end{minipage}
+
+    \vspace{0.5cm} % Espace entre les deux rangées
+
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Composants/DSN6009.jpg}
+        \caption{XL6009}
+        \label{fig:xl6009}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Composants/LoRa WAN.png}
+        \caption{Module LoRaWAN}
+        \label{fig:lorawan}
+    \end{minipage}
+\end{figure}
+\clearpage
+
+\section{Logiciel}
+\noindent Dans un but pédagogique, la programmation du microcontrôleur a été faite dans un système par blocs (similaire à \textit{Scratch}). Nous avons eu recours au \textit{BIPES Project} \cite{BIPES}, permettant d'utiliser des blocs pour programmer l'ESP32, en utilisant du MicroPython pour l'interprétation. Pour utiliser la caméra de l'ESP32-CAM avec MicroPython, il est nécessaire de compiler et installer sur la carte un nouveau firmware, possédant le module Python pour la caméra. Pour que ce firmware soit compatible avec BIPES, nous avons utilisé le travail de Sharil Tumin \cite{FIRM}. Enfin, le module BMP280 et le module LoRa WAN peuvent être utilisés directement par BIPES, à travers des bibliothèques Python s'installant à travers l'interface web.\bigskip
+
+\noindent L'utilisation d'autant de fonctionnalités atteint cependant ses limites avec MicroPython et nous avons donc du recourir à un code en langage \textit{C++} pour éviter des instabilités.\\
+
+\noindent Le code utilisé pour faire fonctionner le dispositif doit permettre de détecter la phase de décollage de la fusée ainsi que le largage du cansat. Cela est fait en utilisant le capteur de pression, qui permet de détecter l'altitude. Ainsi une forte baisse de pression indique une montée, et inversement. Lors de la phase de descente, la pression, la température, et une image prise par la caméra sont enregistrées périodiquement sur la carte SD, et les mesures de pression et température transmises au sol par le module LoRa.\\
+
+\noindent Le code de vol doit composer avec une limitation notable de la plateforme ESP32-CAM : la saturation des bus du microcontrolleur. En effet entre la caméra et la carte SD, les entrées/sorties de l'ESP32 possèdent peu de disponibilités. Il a donc été choisi de tour à tour activer puis désactiver chaque composant, lors de chaque mesure, en sauvegardant d'abord en mémoire vive leur sortie, afin de réaliser les mesures et la captation d'images.
+
+
+\noindent L'organisation du code est la suivante :
+\begin{itemize}
+\item Import des bibliothèques
+\item Définition des variables globales
+\item Définition des fonctions d'initialisation et de déinitialisation de chaque composant
+\item Définition des fonctions utilitaires (écriture en carte SD et transmission par LoRa des mesures, détection de chute et d'atterrissage)
+\item Définition des fonctions de captation des données et de mise en veille de l'ESP32
+\item "void setup"
+\item "void loop"
+\end{itemize}
+
+Le code de la boucle suit la temporalité de la mission : 
+\begin{itemize}
+\item Une première phase (pré-éjection) va périodiquement faire une estimation de l'altitude et de la vitesse du cansat. Si l'altitude commence à baisser assez rapidement (selon un seuil défini à partir des vitesses de chute attendues), le code passe à la boucle suivante.
+
+\item Tant que le cansat n'est pas au sol des mesures de pression et de températures ainsi qu'une estimation de l'altitude vont périodiquement être réalisées, sauvegardées dans un fichier \textit{csv} stocké sur la carte µSD et émises en LoRaWAN. Une photo à l'instant de la mesure est aussi faite, elle est aussi stockée sur la carte SD. 
+
+\item Une fois le cansat au sol (détection par altitude constante pendant quelques secondes), le pin contrôlant le transistor est mis en \textit{HIGH} et l'ESP32 est mis en sommeil profond.
+
+\section{Télémétrie}
+
+\noindent Le module LoRaWAN à bord du cansat transmettra les données jusqu'à un second module LoRaWAN au niveau de la station sol, connecté à un Arduino Uno connecté à un ordinateur, où nous pourrons suivre l'évolution en direct via la sortie série.\\
+
+\noindent Les deux modules sont identiques, émettent et recoivent à 868MHz, fréquence libre en Union Européenne. Ils ont un gain de 20dBm pour une consommmation maximale de 20mW en émission.
 
 Tests sur platine de prototypage :
-Protocole : 
-- Test des régulateurs de tension : utilisation des potentiomètres pour régler
+\begin{itemize}
+\item Test des régulateurs de tension : utilisation des potentiomètres pour régler
   leur sortie, mesures au multimètre pour s'assurer au premier ordre d'un bon
   output, puis à l'oscillo pour caractériser le bruit/les imperfections
-- Alimentation de l'ESP32-CAM seule, code initial de clignotage du flash pour
+\item Alimentation de l'ESP32-CAM seule, code initial de clignotage du flash pour
   s'assurer du bon fonctionnement.
-- Inclusion des périphériques 1 à 1 en commencant par un code de test propre
+\item Inclusion des périphériques 1 à 1 en commencant par un code de test propre
   à chaque périphérique puis un code les utilisant tous (ce code là deviens au
   final le code de vol)
-- Debug si nécessaire et vérification des tensions I/O au multimètre/à l'oscillo.
+\item Debug si nécessaire et vérification des tensions I/O au multimètre/à l'oscillo.
+\end{itemize}
 
 Insérer photos des montages.
 Une fois le prototypage terminé, travail sur une PCB, selon les contraintes

@@ -149,31 +149,31 @@ void deinitLORA(){
 }
 
 void setup() {
-  pinMode(TRANSISTOR_PIN,OUTPUT);
-  digitalWrite(TRANSISTOR_PIN, HIGH);
-  delay(1000);
-  digitalWrite(TRANSISTOR_PIN, LOW);
+  //pinMode(TRANSISTOR_PIN,OUTPUT);
+  //digitalWrite(TRANSISTOR_PIN, HIGH);
+  //delay(1000);
+  //digitalWrite(TRANSISTOR_PIN, LOW);
 }
 
 void loop() {
 
-  initBMP280();
-  float temperature = bmp.getTemperature();
-  uint32_t pressure = bmp.getPressure();
-  int16_t altitude = bmp.calAltitude(pressure,1013.25);
-  deinitBMP280();
+  //initBMP280();
+  //float temperature = bmp.getTemperature();
+  //uint32_t pressure = bmp.getPressure();
+  //int16_t altitude = bmp.calAltitude(pressure,1013.25);
+  //deinitBMP280();
     
   initSDCard();
-  saveDataToSD(temperature, pressure, altitude);
+  //saveDataToSD(temperature, pressure, altitude);
     
   initCamera();
   takePic();
   deinitCamera();
   deinitSDCard();
 
-  initLORA();
-  sendData(temperature, pressure, altitude);
-  rf95.waitPacketSent();
+  //initLORA();
+  //sendData(temperature, pressure, altitude);
+  //rf95.waitPacketSent();
 
   delay(1500);
 }
