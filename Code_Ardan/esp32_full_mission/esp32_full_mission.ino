@@ -118,7 +118,7 @@
  void initLORA() {
    rf95.init();
    rf95.setTxPower(23, false);
-   rf95.setFrequency(868.0);
+   rf95.setFrequency(868.125);
  }
  
  // === FONCTIONS DE DÉSINITIALISATION ===
