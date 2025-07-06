@@ -28,7 +28,7 @@ void setup() {
     // you can set transmitter powers from 5 to 23 dBm:
     //rf95.setTxPower(13, false);
 
-    rf95.setFrequency(868.0);
+    rf95.setFrequency(868.125);
 }
 
 void loop() {
